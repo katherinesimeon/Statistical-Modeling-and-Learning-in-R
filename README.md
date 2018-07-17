@@ -17,3 +17,5 @@ Prerequisites:
 Time and Location: 9am-12pm, Mudd Library, Large Classroom, Room 2210
 
 Practice Session: 1:30pm, Mudd Library, Large Classroom, Room 2210
+
+Workshop materials are also available in this repository. Instruction for downloading from GitHub can be found here: https://sites.northwestern.edu/summerworkshops/resources/downloading-from-github/
