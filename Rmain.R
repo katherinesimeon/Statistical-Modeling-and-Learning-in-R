@@ -11,14 +11,15 @@ toy$y <- 5 + toy$x1 + 2*toy$x2 + toy$x2*toy$x3 + rnorm(n=n, mean=0, sd=1)
 # data exploration:
 summary(toy)
 cor(toy)
-hist(y)
+hist(toy$y)
 pairs(toy)
 
 # fit a model
 toy.lm1 <- lm(formula=y ~ x1 + x2 + x3, data=toy)
 # model outputs
-summary(toy.lm1)
 toy.lm1
+summary(toy.lm1)
+
 #> practice 1 --------------------------------------------------------
 # to use Cars93 data set
 require(MASS)
@@ -57,8 +58,6 @@ lm(y ~ x1*x2*x3 - (x1+x2+x3)^2 + ., data=toy)
 lm(log(abs(y)) ~ x1 + x2 + I(x2^2) + I(x2*x3), data=toy)
 lm(log(abs(y)) ~ x1 + x2 + x2^2 + x2*x3, data=toy)
 #> practice 2 --------------------------------------------------------
-# to use Cars93 data set
-require(MASS)
 # fit the model with interaction and log-transform
 car.lm2 <- lm(formula=log(Price) ~ Horsepower*Weight, data=Cars93)
 # variable statistical significance
@@ -104,12 +103,13 @@ residuals(car.lm4)
 #> Iris dataset ----------------------------------------------
 summary(iris)
 pairs(iris)
-cor(iris$Petal.Length, iris$Petal.Width)
+cor(iris[,-5])
 #> model fitting ----------------------------------------------
 iris.glm1 <- glm(formula=Species != "virginica" ~ ., 
                  family=binomial, data=iris)
 ?family # see supported distribution and link functions
 #> model outputs & diagnostic toolsplot(iris.glm1)
+iris.glm1
 summary(iris.glm1)
 plot(iris.glm1)
 methods(class='glm')
@@ -126,35 +126,49 @@ iris.glm2_prob <- predict(iris.glm2, iris, type='response')
 #> install the 'lme4' package and load it into the enviroment  ----
 install.packages('lme4')
 require(lme4)
-#> data summary --------------------------------------
+#> data exploration --------------------------------------
 str(sleepstudy)
+summary(sleepstudy)
+require(lattice)
+xyplot(Reaction ~ Days | Subject, sleepstudy, pch= 20, layout=c(9,2),
+       panel = function(x, y) {
+         panel.grid(h = -1, v = 2)
+         panel.xyplot(x, y)
+         panel.loess(x, y, span=1)
+       })
 #> fit the model  --------------------------------------
 sleep.lmer1 <- lmer(formula=Reaction ~ Days + (Days | Subject), data=sleepstudy)
 #> model outputs and predictions  --------------------------------------
 summary(sleep.lmer1)
+fixef(sleep.lmer1)
+ranef(sleep.lmer1)
 coef(sleep.lmer1)
 predict(sleep.lmer1, sleepstudy)
 #> basic diagnostic plots  --------------------------------------
 plot(sleep.lmer1, type = c("p", "smooth"))
 plot(sleep.lmer1, sqrt(abs(resid(.))) ~ fitted(.), type = c("p", "smooth"))
-lattice::qqmath(sleep.lmer1, id = 0.05)
+qqmath(sleep.lmer1, id = 0.05)
 #> practice 5 --------------------------------------
 # varying-intercept with fixed-slope model
 sleep.lmer2 <- lmer(formula=Reaction ~ Days + (1 | Subject), data=sleepstudy)
 summary(sleep.lmer2)
+fixef(sleep.lmer2)
+ranef(sleep.lmer2)
 coef(sleep.lmer2)
 sleepstudy$Reaction - predict(sleep.lmer2, sleepstudy)
 plot(sleep.lmer2, type = c("p", "smooth"))
 plot(sleep.lmer2, sqrt(abs(resid(.))) ~ fitted(.), type = c("p", "smooth"))
-lattice::qqmath(sleep.lmer2, id = 0.05)
+qqmath(sleep.lmer2, id = 0.05)
 # varying-intercept with fixed-mean model 
 sleep.lmer3 <- lmer(formula=Reaction ~ 1 + (1 | Subject), data=sleepstudy)
 summary(sleep.lmer3)
+fixef(sleep.lmer3)
+ranef(sleep.lmer3)
 coef(sleep.lmer3)
 sleepstudy$Reaction - predict(sleep.lmer3, sleepstudy)
 plot(sleep.lmer3, type = c("p", "smooth"))
 plot(sleep.lmer3, sqrt(abs(resid(.))) ~ fitted(.), type = c("p", "smooth"))
-lattice::qqmath(sleep.lmer3, id = 0.05)
+qqmath(sleep.lmer3, id = 0.05)
 
 ### Regression Trees --------------------------------------
 # install the 'rpart' package and load it into the enviroment
@@ -238,7 +252,7 @@ install.packages("randomForest")
 require(randomForest)
 #> fit a random forest --------------------------------------------------------------
 iris.rf1 <- randomForest(Species ~ ., data=iris, ntree=100, mtry=2, importance=TRUE)
-iris.rf1 # random forest outputs
+iris.rf1
 #> plots --------------------------------------------------------------------------
 plot(iris.rf1)
 varImpPlot(iris.rf1)
