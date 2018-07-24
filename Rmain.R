@@ -83,6 +83,8 @@ summary(toy.lm3)
 plot(toy.lm3)
 # see more tools:
 methods(class='lm')
+toy.lm3.infl <- influence.measures(toy.lm3)
+summary(toy.lm3.infl)
 #> predictions ------------------------------------------------------------
 predict(object=toy.lm3, newdata=toy)
 predict(object=toy.lm3, newdata=toy, interval = "prediction")
