@@ -7,8 +7,6 @@ You’ve learned the basics of R, but now you need to know how to actually do yo
     Make predictions with regression models in R
     Basic model diagnostic tools
 
-This workshop is a part of the Data Science and Programming Summer Workshop Series: https://sites.northwestern.edu/summerworkshops
-
 Prerequisites:
 
     Experience with R of at least the level of the Introduction to R workshop
