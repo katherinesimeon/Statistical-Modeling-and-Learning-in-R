@@ -11,7 +11,7 @@ toy$y <- 5 + toy$x1 + 2*toy$x2 + toy$x2*toy$x3 + rnorm(n=n, mean=0, sd=1)
 # data exploration:
 summary(toy)
 cor(toy)
-hist(toy$y)
+hist(toy$y) # Frequency of y variable
 pairs(toy)
 
 # fit a model
@@ -22,7 +22,7 @@ summary(toy.lm1)
 
 #> practice 1 --------------------------------------------------------
 # to use Cars93 data set
-require(MASS)
+library(MASS) 
 # Data exploration
 summary(Cars93)
 pairs(Cars93)
@@ -35,12 +35,12 @@ summary(car.lm1)
 #> write R formulas --------------------------------------------------------
 # use all variables
 lm(y ~ ., data=toy)
-# add variable interactions
+# add variable interactions (here, it's only 2-way interactions)
 lm(y ~ . + x1:x2 + x1:x3 + x2:x3, data=toy)
-# or equivalently
+# or equivalently (to above)
 lm(y ~ (x1 + x2 + x3)^2, data=toy)
 lm(y ~ . + .^2, data=toy)
-# add all possible interactions
+# add all possible interactions (same as before but with x1:x2:x3)
 lm(y ~ x1*x2*x3, data=toy)
 # the above is equivalent with
 lm(y ~ (x1 + x2 + x3)^3, data=toy)
@@ -80,18 +80,21 @@ toy.lm3 <- step(object=toy.lm2, scope=~ .^2)
 summary(toy.lm3)
 #> diagnostics tools --------------------------------------------------------
 # basic plot
-plot(toy.lm3)
+plot(toy.lm3) # See different representations of the residual
 # see more tools:
-methods(class='lm')
+methods(class='lm') # see all functions for lm
+class(toy.lm1) # lm class
 toy.lm3.infl <- influence.measures(toy.lm3)
 summary(toy.lm3.infl)
 #> predictions ------------------------------------------------------------
+# predict is generic function
 predict(object=toy.lm3, newdata=toy)
-predict(object=toy.lm3, newdata=toy, interval = "prediction")
+predict(object=toy.lm3, newdata=toy, interval = "prediction") # interval argument
 predict(object=toy.lm3, newdata=toy, interval = "confidence")
 #> practice 3 -------------------------------------------------------------
 # fit the initial model
 car.lm3 <- lm(log(Price) ~ Horsepower + Weight + AirBags, data=Cars93)
+summary(car.lm3)
 # stepwise regression
 car.lm4 <- step(car.lm3, ~ + .^2)
 summary(car.lm4)
@@ -109,12 +112,13 @@ cor(iris[,-5])
 #> model fitting ----------------------------------------------
 iris.glm1 <- glm(formula=Species != "virginica" ~ ., 
                  family=binomial, data=iris)
+# Getting error for above glm: glm.fit: fitted probabilities numerically 0 or 1 occurred 
 ?family # see supported distribution and link functions
 #> model outputs & diagnostic toolsplot(iris.glm1)
 iris.glm1
 summary(iris.glm1)
 plot(iris.glm1)
-methods(class='glm')
+methods(class='glm') # All functions that utilize class glm
 #> predictions ----------------------------------------------
 iris.glm1_logodd <- predict(iris.glm1, iris, type='link')
 iris.glm1_prob <- predict(iris.glm1, iris, type='response')
@@ -126,12 +130,12 @@ iris.glm2_prob <- predict(iris.glm2, iris, type='response')
 
 ### Multilevel Regression --------------------------------------
 #> install the 'lme4' package and load it into the enviroment  ----
-install.packages('lme4')
-require(lme4)
+#install.packages('lme4')
+library(lme4)
 #> data exploration --------------------------------------
 str(sleepstudy)
 summary(sleepstudy)
-require(lattice)
+library(lattice)
 xyplot(Reaction ~ Days | Subject, sleepstudy, pch= 20, layout=c(9,2),
        panel = function(x, y) {
          panel.grid(h = -1, v = 2)
@@ -174,8 +178,8 @@ qqmath(sleep.lmer3, id = 0.05)
 
 ### Regression Trees --------------------------------------
 # install the 'rpart' package and load it into the enviroment
-install.packages('rpart')
-require(rpart)
+# install.packages('rpart')
+library(rpart)
 # see current parameter setting
 rpart.control()
 # set new parameters for rpart
