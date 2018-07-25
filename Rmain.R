@@ -215,6 +215,7 @@ car.tree4 <- prune(car.tree3, cp=.023)
 Cars93$Price - predict(object=car.tree4, newdata=Cars93, type='vector')
 residuals(car.tree4)
 #> Regression Tree Diagnostics --------------------------------------------------------------
+control <- rpart.control(minscplit=20, cp=0.01)
 car.tree5 <- rpart(Price ~ Horsepower + Weight , data=Cars93, control=control)
 plotcp(car.tree5)
 res <- residuals(car.tree5)
